@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///shop.db'
-db = SQLAlchemy
+db = SQLAlchemy(app)
 
 class Item(db.Model):
     id= db.Column(db.Integer, primary_key=True)
@@ -21,6 +21,10 @@ def index():
 @app.route('/about')
 def about():
     return render_template('about.html')
+
+@app.route('/create')
+def create():
+    return render_template('create.html')
 
 @app.route('/homepage')
 def homepage():
