@@ -10,6 +10,7 @@ db = SQLAlchemy(app)
 class Item(db.Model):
     id= db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
+    photo = db.Column(db.LargeBinary, nullable=False)
     price = db.Column(db.Integer, nullable=False)
     active = db.Column(db.Boolean, default=True)
     text = db.Column(db.Text, nullable=False)
@@ -26,10 +27,11 @@ def about():
 def create():
     if request.method == 'POST':
         title = request.form['title']
+        photo = request.form['photo']
         price = request.form['price']
         text = request.form['text']
 
-        item = Item(title=title, price=price, text=text)
+        item = Item(title=title, price=price, text=text, photo=photo)
 
         try:
             db.session.add(item)
