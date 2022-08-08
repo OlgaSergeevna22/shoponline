@@ -1,18 +1,22 @@
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from base64 import b64encode
 
-
+MAX_FILE_SIZE = 1024 * 1024 + 1
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///shop.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.jinja_env.filters['b64d'] = lambda u: b64encode(u).decode() #add filter for templates
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+
+
 
 class Item(db.Model):
     id= db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
-    # photo = db.Column(db.LargeBinary, nullable=False)
+    photo = db.Column(db.LargeBinary, nullable=False)
     price = db.Column(db.Integer, nullable=False)
     active = db.Column(db.Boolean, default=True)
     text = db.Column(db.Text, nullable=False)
@@ -22,24 +26,30 @@ class Item(db.Model):
 def index():
     return render_template('index.html')
 
+@app.route('/test_index')
+def index_test():
+    ds = Item.query.all()
+    return render_template('index_test.html',ds=ds)
+
 @app.route('/about')
 def about():
     return render_template('about.html')
 
 @app.route('/create', methods=['POST', 'GET'])
 def create():
+
     if request.method == 'POST':
+        file = request.files["file"].read()
         title = request.form['title']
-        # photo = request.form['photo']
         price = request.form['price']
         text = request.form['text']
-
-        item = Item(title=title, price=price, text=text,)# photo=photo)
+        print(request.form)
+        item = Item(title=title, price=price, text=text,photo=file)
 
         try:
             db.session.add(item)
             db.session.commit()
-            return redirect('/')
+            return redirect('/about')
         except:
             return 'Произошла ошибка'
 

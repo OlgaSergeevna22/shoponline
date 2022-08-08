@@ -7,10 +7,10 @@
 {%block body%}
 <div class="container">
     <h1>Добавление товара</h1>
-    <form method="post">
+    <form action="" enctype='multipart/form-data' method="post">
         <p><b><label>Название товара</label></b></p>
         <input type="text" name="title" id="title" class="container form-control" placeholder="Введите название"><br>
-<!--        <input type="file" accept="image/jpeg" name="photo" id="photo" class="container form-control" ><br>-->
+        <input type="file" name="file" style="margin-top:20px;"/><br>
         <p><b><label>Описание товара</label></b></p>
         <textarea name="text" id="text" class="container form-control" placeholder="Описание товара"></textarea><br>
         <p><b><label>Стоимость товара</label></b></p>
