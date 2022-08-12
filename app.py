@@ -16,7 +16,7 @@ migrate = Migrate(app, db)
 class Item(db.Model):
     id= db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
-    photo = db.Column(db.LargeBinary, nullable=False)
+    photo = db.Column(db.BLOB, nullable=False)
     price = db.Column(db.Integer, nullable=False)
     active = db.Column(db.Boolean, default=True)
     text = db.Column(db.Text, nullable=False)
@@ -53,7 +53,7 @@ def create():
         try:
             db.session.add(item)
             db.session.commit()
-            return redirect('/about')
+            return redirect('/')
         except:
             return 'Произошла ошибка'
 
