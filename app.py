@@ -21,10 +21,14 @@ class Item(db.Model):
     active = db.Column(db.Boolean, default=True)
     text = db.Column(db.Text, nullable=False)
 
+    def __repr__(self):
+        return self.title
+
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    items = Item.query.order_by(Item.price).all()
+    return render_template('index.html', data=items)
 
 @app.route('/test_index')
 def index_test():
