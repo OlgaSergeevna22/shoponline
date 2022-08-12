@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from base64 import b64encode
+from cloudipsp import Api, Checkout
 
 MAX_FILE_SIZE = 1024 * 1024 + 1
 app = Flask(__name__)
@@ -38,6 +39,20 @@ def index_test():
 @app.route('/about')
 def about():
     return render_template('about.html')
+
+@app.route('/buy/<int:id>')
+def buy(id):
+    item = Item.query.get(id)
+
+    api = Api(merchant_id=1396424,
+              secret_key='test')
+    checkout = Checkout(api=api)
+    data = {
+        "currency": "RUB",
+        "amount": str(item.price) + "00"
+    }
+    url = checkout.url(data).get('checkout_url')
+    return redirect(url)
 
 @app.route('/create', methods=['POST', 'GET'])
 def create():
